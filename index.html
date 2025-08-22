@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>8 meses contigo</title>
+  <meta name="description" content="Un pequeño sitio web para celebrar 8 meses juntos." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0f172a;         /* slate-900 */
+      --card: #111827ee;     /* gray-900 */
+      --muted: #94a3b8;      /* slate-400 */
+      --text: #e5e7eb;       /* gray-200 */
+      --accent: #f472b6;     /* pink-400 */
+      --accent-2: #38bdf8;   /* sky-400 */
+      --ring: #f472b680;
+      --glow: 0 10px 30px rgba(244,114,182,.25);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      font-family: Poppins, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 80% -10%, #1f2937, transparent),
+                  radial-gradient(800px 600px at 0% 100%, #0b1220, transparent),
+                  linear-gradient(180deg, #0a0f1e, #0b1020 40%, #0a0e1d);
+      line-height: 1.6;
+    }
+
+    a { color: var(--accent-2); }
+
+    .container{ max-width: 1100px; margin: 0 auto; padding: 24px; }
+
+    /* Header / Hero */
+    header{
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: linear-gradient(180deg, rgba(56,189,248,.08), rgba(244,114,182,.08));
+    }
+    .hero{ display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: center; padding: 56px 0; }
+    .badge{ display:inline-flex; align-items:center; gap:8px; padding:6px 12px; border:1px solid rgba(255,255,255,.12); border-radius:999px; color: var(--muted); font-size: 12px; letter-spacing:.2px; backdrop-filter: blur(6px); }
+    .badge .dot{ width:8px; height:8px; border-radius:999px; background: radial-gradient(circle at 30% 30%, #fff, var(--accent)); box-shadow: 0 0 12px var(--accent); }
+
+    h1{ font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 72px); line-height: 1.05; margin: 12px 0 8px; letter-spacing: .2px; }
+    .subtitle{ color: var(--muted); font-size: clamp(14px,2.4vw,18px); max-width: 60ch; }
+
+    .hero-card{ position: relative; border-radius: 24px; overflow: hidden; box-shadow: var(--glow); border:1px solid rgba(255,255,255,.08); }
+    .hero-card img{ display:block; width:100%; height:100%; object-fit: cover; aspect-ratio: 4/3; filter: saturate(1.05) contrast(1.05); }
+    .hero-card::after{ content:""; position:absolute; inset:0; background: linear-gradient(180deg, transparent, rgba(0,0,0,.35)); }
+    .hero-stamp{ position:absolute; left:16px; bottom:16px; background: rgba(17,24,39,.6); backdrop-filter: blur(6px); padding:10px 14px; border-radius: 16px; border:1px solid rgba(255,255,255,.12); font-size: 14px; }
+
+    /* Section cards */
+    section{ padding: 48px 0; }
+    .card{ background: linear-gradient(180deg, rgba(17,24,39,.7), rgba(17,24,39,.4)); border:1px solid rgba(255,255,255,.08); border-radius: 24px; padding: 28px; backdrop-filter: blur(4px); box-shadow: 0 8px 30px rgba(0,0,0,.25); }
+    .card h2{ font-family: 'Playfair Display', serif; font-size: clamp(26px,4.5vw,38px); margin: 0 0 10px; }
+    .card p{ color: #cbd5e1; }
+
+    /* Letter */
+    .letter{ font-size: 18px; }
+    .letter p{ margin: 0 0 16px; }
+    .signature{ margin-top: 16px; color: var(--muted); }
+
+    /* Timeline */
+    .timeline{ margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 16px; }
+    .moment{ position: relative; padding: 16px; border:1px solid rgba(255,255,255,.08); border-radius: 18px; background: #0b1220cc; }
+    .moment h3{ margin: 0 0 6px; font-size: 16px; letter-spacing:.2px; color: #e2e8f0; }
+    .moment small{ color: var(--muted); }
+
+    /* Gallery */
+    .gallery{ display:grid; grid-template-columns: repeat(12,1fr); gap:10px; }
+    .g-item{ position:relative; overflow:hidden; border-radius:16px; border:1px solid rgba(255,255,255,.08); }
+    .g-item img{ width:100%; height:100%; display:block; object-fit: cover; filter: saturate(1.05); transition: transform .5s ease; }
+    .g-item:hover img{ transform: scale(1.06); }
+
+    .span-6{ grid-column: span 6; }
+    .span-4{ grid-column: span 4; }
+    .span-8{ grid-column: span 8; }
+
+    /* Lightbox */
+    .lightbox{ position: fixed; inset: 0; background: rgba(0,0,0,.8); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 60; }
+    .lightbox.open{ display: flex; }
+    .lightbox img{ max-width: 95vw; max-height: 80vh; border-radius: 16px; border:1px solid rgba(255,255,255,.15); box-shadow: 0 10px 40px rgba(0,0,0,.5); }
+    .lightbox .close{ position:absolute; top: 18px; right: 18px; font-size: 32px; cursor: pointer; padding: 6px 10px; border-radius: 10px; background: rgba(17,24,39,.6); border:1px solid rgba(255,255,255,.12); }
+
+    /* Footer */
+    footer{ padding: 36px 0 56px; color: var(--muted); text-align:center; font-size: 14px; }
+
+    /* Buttons */
+    .btn{
+      display:inline-flex; align-items:center; gap:10px; cursor:pointer; user-select:none; border-radius:999px; padding:10px 16px; border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(244,114,182,.15), rgba(56,189,248,.12));
+      box-shadow: var(--glow);
+      color:#fff; text-decoration:none; font-weight:600; letter-spacing:.2px; transition: transform .15s ease, box-shadow .2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 10px 30px rgba(56,189,248,.18); }
+
+    /* Responsive tweaks */
+    @media (max-width: 900px){
+      .hero{ grid-template-columns: 1fr; }
+      .gallery{ grid-template-columns: repeat(6,1fr); }
+      .span-8{ grid-column: span 6; }
+      .span-6{ grid-column: span 6; }
+      .span-4{ grid-column: span 3; }
+    }
+    @media (max-width: 540px){
+      .gallery{ grid-template-columns: repeat(2,1fr); }
+      .span-8, .span-6, .span-4{ grid-column: span 2; }
+    }
+
+    /* Cute animated hearts */
+    .float-hearts{ pointer-events:none; position:absolute; inset:0; overflow:hidden; }
+    .heart{ position:absolute; width:14px; height:14px; background: radial-gradient(circle at 30% 30%, #fff, var(--accent)); transform: rotate(45deg); opacity:.35; filter: blur(.2px); }
+    .heart::before,.heart::after{ content:""; position:absolute; width:14px; height:14px; background: inherit; border-radius:50%; }
+    .heart::before{ left:-7px; }
+    .heart::after{ top:-7px; }
+
+    .lightbox {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0,0,0,0.9);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .lightbox.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .lightbox-content {
+    display: block;
+    margin: auto;
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 10px;
+    box-shadow: 0 0 25px rgba(255,255,255,0.4);
+    animation: zoomIn 0.4s ease;
+  }
+
+  @keyframes zoomIn {
+    from {transform: scale(0.7);}
+    to {transform: scale(1);}
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .close:hover {
+    color: #f00;
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container hero">
+      <div>
+        <span class="badge"><span class="dot"></span> 8 mesesitos con mi Osita </span>
+        <h1>Gracias por estos 8 meses, mi vida</h1>
+        <p class="subtitle">Gracias por cada momento a tu lado. Esta es una pequeña carta para ti y para que recordarte que TE AMITO MUCHO. 💫</p>
+        <div style="margin-top:18px; display:flex; gap:12px; flex-wrap:wrap;">
+          <a class="btn" href="#carta">Leer mi carta</a>
+          <a class="btn" href="#galeria">Ver nuestras foticos</a>
+        </div>
+      </div>
+      <figure class="hero-card">
+        <!-- Reemplaza esta imagen por la tuya: /images/portada.jpg -->
+        <img src="images/img1.png" alt="Nosotros" />
+        <figcaption class="hero-stamp">Desde <span id="desde">22/12/2024</span></figcaption>
+      </figure>
+    </div>
+    <div class="float-hearts" id="hearts"></div>
+  </header>
+
+  
+
+  <main class="container">
+    <!-- Carta -->
+    <section id="carta">
+      <article class="card letter">
+        <h2>Mi carta para ti</h2>
+        <p>Amor, hoy ya son ocho mesesitos a tu lado, desde que nuestras vidas se cruzaron de una forma tan abonitada. De verdad que tengo que agradecerte mucho y no se de que forma hacerlo. Gracias por tu paciencia, tus risas, tus abrazos y por todo lo que hemos aprendido juntos.</p>
+        <p>Quiero seguir construyendo un futuro contigo, paso a paso, con respeto, comunicación y muchos detalles bonitos. Porque contigo, todo es más lindo.</p>
+        <p>Gracias por ser mi amiga, mi confidente, mi persona de confianza, mi novia y mucho más, Te amo. ❤️</p>
+        <p class="signature">— Con todo mi corazón, <strong> Keiiichita wapaa </strong></p>
+      </article>
+    </section>
+
+    <!-- Línea de tiempo (8 momentos) -->
+    <section id="momentos">
+      <div class="card">
+        <h2>8 de Nuestros momenticos juntos✨</h2>
+        <div class="timeline">
+          <div class="moment">
+            <h3>1) Cuando te conocí</h3>
+            <small>[Hace uuuuhhh / Ya sabes donde]</small>
+            <p>Ese día la vi, me llamo mucho atención y empecé a buscar la forma de acercarme a ti.</p>
+          </div>
+          <div class="moment">
+            <h3>2) Nuestra primera salida</h3>
+            <small>[21 de Setiembre / La 45, San Pedro]</small>
+            <p>Los nerviosa full, no sabia que decirte o como actuar, pero quería hacerte sentir lo mejor posible.</p>
+          </div>
+          <div class="moment">
+            <h3>3) Primera foto junticos</h3>
+            <small>[21 de Setiembre / La 45, San Pedro]</small>
+            <p>Me senti demasiado iluminado por dentro y me encanto esa fotico junto a tu lado.</p>
+          </div>
+          <div class="moment">
+            <h3>4) Un viaje inolvidable</h3>
+            <small>[12 de Julio / Limón]</small>
+            <p>Descubrir el mundo contigo es mi plan favorito, me encanto mucho este viaje y como la pase contigo. </p>
+          </div>
+          <div class="moment">
+            <h3>5) Nuestros pasatiempos</h3>
+            <small>[Varias veces]</small>
+            <p>Me encanta pasar tiempo contigo e inventar cositas nuevas mi amor, salimos, comemos, vemos algo juntos, jugamos, dormimos juntos... simplemente me encanta</p>
+          </div>
+          <div class="moment">
+            <h3>6) Un día normal perfecto</h3>
+            <small>[Muchos dias / En muchos lugares]</small>
+            <p>De verdad que siempre que nos vemos y estamos junticos me encanta, asi salgamos o nos toque estar en casa.</p>
+          </div>
+          <div class="moment">
+            <h3>7) Una sorpresa</h3>
+            <small>[Varias veces]</small>
+            <p>Con esto, hablo de cuando te doy cositas, me encanta ver siempre la manera en que reaccionas cuando te doy algo, siempre es una reación tan real, me encanta cuando sonries! </p>
+          </div>
+          <div class="moment">
+            <h3>8) Hoy</h3>
+            <small>[22 de Agosto]</small>
+            <p>Gracias por elegirnos cada día. Vamos por más y espero que te haya gustado mi detallito mi amor. </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galería -->
+    <section id="galeria">
+      <div class="card">
+        <h2>Nuestra galería 📷</h2>
+        <p>Algunos momenticos con mi niñita <code>/images</code>. Se abrirán en grande al hacer clic.</p>
+        <div class="gallery" aria-live="polite">
+          <!-- Cambia las rutas por tus fotos: images/foto-1.jpg ... -->
+          <a class="g-item span-8" href="#" data-img="images/foto-1.jpg"><img src="images\img1.png" alt="Foto 1" loading="lazy"></a>
+          <a class="g-item span-4" href="#" data-img="images/foto-2.jpg"><img src="images\Captura de pantalla 2025-08-22 030744.png" alt="Foto 2" loading="lazy"></a>
+          <a class="g-item span-6" href="#" data-img="images/foto-3.jpg"><img src="images\img77.png" alt="Foto 3" loading="lazy"></a>
+          <a class="g-item span-6" href="#" data-img="images/foto-4.jpg"><img src="images\img44.png" alt="Foto 4" loading="lazy"></a>
+          <a class="g-item span-4" href="#" data-img="images/foto-5.jpg"><img src="images\img652.png" alt="Foto 5" loading="lazy"></a>
+          <a class="g-item span-8" href="#" data-img="images/foto-6.jpg"><img src="images\img_3422.jpg" alt="Foto 6" loading="lazy"></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Frase final -->
+    <section>
+      <div class="card" style="text-align:center">
+        <h2>Tú eres lo mejor de mi vida</h2>
+        <p>Gracias por estos ocho meses tan hermosos. Sigamos escribiendo nuestra historia juntos y de la mano de Diosito. 💖</p>
+        <a class="btn" href="#top">Volver arriba</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Lightbox -->
+<div id="lightbox" class="lightbox">
+  <span class="close">&times;</span>
+  <img class="lightbox-content" id="lightbox-img" alt="Imagen ampliada">
+</div>
+
+<script>
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImg = document.getElementById("lightbox-img");
+  const closeBtn = document.querySelector(".close");
+
+ // Abrir imagen al hacer clic
+document.querySelectorAll(".gallery a").forEach(item => {
+  item.addEventListener("click", function(e) {
+    e.preventDefault();
+    const imgSrc = this.querySelector("img").src;
+    lightboxImg.src = imgSrc;
+    lightbox.classList.add("show");
+  });
+});
+
+// Cerrar con la X
+closeBtn.onclick = function() {
+  lightbox.classList.remove("show");
+}
+
+// Cerrar al hacer clic fuera de la imagen
+lightbox.onclick = function(e) {
+  if (e.target === lightbox) {
+    lightbox.classList.remove("show");
+  }
+}
+</script>
+  <footer>
+    Hecho con ♥ para <strong> Keiiichita </strong>. — <span id="anio"></span>
+  </footer>
+
+  <script>
+    // Fecha automática del footer
+    document.getElementById('anio').textContent = new Date().getFullYear();
+
+    // Lightbox simple
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    document.querySelectorAll('[data-img]').forEach(a => {
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const src = a.getAttribute('data-img');
+        lightboxImg.src = src;
+        lightbox.classList.add('open');
+      });
+    });
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target.classList.contains('close')) {
+        lightbox.classList.remove('open');
+        lightboxImg.removeAttribute('src');
+      }
+    });
+
+    // Corazón flotando aleatorio (decorativo)
+    const hearts = document.getElementById('hearts');
+    function spawnHeart(){
+      const h = document.createElement('div');
+      h.className = 'heart';
+      const size = 8 + Math.random()*20;
+      h.style.width = h.style.height = size + 'px';
+      const x = Math.random()*100;
+      h.style.left = x + 'vw';
+      h.style.bottom = '-20px';
+      h.style.opacity = 0.25 + Math.random()*0.35;
+      hearts.appendChild(h);
+      const dur = 4000 + Math.random()*4000;
+      const drift = (Math.random()*40 - 20) + 'px';
+      const start = Date.now();
+      (function anim(){
+        const t = (Date.now() - start) / dur;
+        if (t >= 1){ hearts.removeChild(h); return; }
+        h.style.transform = `translateY(${-120*t*vh()}px) translateX(${drift}) rotate(45deg)`;
+        requestAnimationFrame(anim);
+      })();
+      function vh(){ return Math.max(document.documentElement.clientHeight, window.innerHeight || 0)/100; }
+    }
+    setInterval(spawnHeart, 900);
+
+    // Rellenar fecha "Desde" si quieres calcularla aquí
+    // document.getElementById('desde').textContent = '16/01/2025';
+  </script>
+</body>
+</html>
